@@ -9,6 +9,8 @@
 require_once('../../config.php');
 require_once('../../enrol/locallib.php');
 
+use \local_activity_center\ActivityCenter;
+
 require_login();
 
 $activity_id = required_param('activity_id', PARAM_RAW);
@@ -21,7 +23,7 @@ $max_participants = optional_param('max_participants', '', PARAM_INT);
 $max_supervisors = optional_param('max_supervisors', '', PARAM_INT);
 
 if ($enrol == "BULKENROL") {
-    $selfenrolment_plugin = enrol_get_plugin('self');
+    $selfenrolment_plugin = enrol_get_plugin(ActivityCenter::ENROL_PLUGIN);
 
     foreach ($SESSION->dnet_activity_center_individuals as $individual) {
         $user = $DB->get_record("user", array("idnumber" => $individual));
@@ -31,7 +33,7 @@ if ($enrol == "BULKENROL") {
         }
         $enrolment_instances = enrol_get_instances($activity_id, true);
         foreach ($enrolment_instances as $instance) {
-            if ($instance->enrol == 'self') {
+            if ($instance->enrol == ActivityCenter::ENROL_PLUGIN) {
                 $selfenrolment_plugin->enrol_user($instance, $user->id, 5);
             }
         }
@@ -48,10 +50,10 @@ if ($enrol == "BULKENROL") {
     $course = $DB->get_record('course', array('id' => $activity_id));
     $user = $DB->get_record('user', array('id' => $user_id));
 
-    $selfenrolment_plugin = enrol_get_plugin('self');
+    $selfenrolment_plugin = enrol_get_plugin(ActivityCenter::ENROL_PLUGIN);
     $enrolment_instances = enrol_get_instances($activity_id, true);
     foreach ($enrolment_instances as $instance) {
-        if ($instance->enrol == 'self') {
+        if ($instance->enrol == ActivityCenter::ENROL_PLUGIN) {
             $selfenrolment_plugin->unenrol_user($instance, $user->id);
         }
     }
@@ -83,7 +85,7 @@ if (!empty($toggle_visibility)) {
 if (!empty($toggle_enrollments)) {
     $enrolment_instances = enrol_get_instances($activity_id, true);
     foreach ($enrolment_instances as $instance) {
-        if ($instance->enrol == 'self') {
+        if ($instance->enrol == ActivityCenter::ENROL_PLUGIN) {
             $value = $instance->customint6 == 1 ? 0 : 1;
             $DB->update_record('enrol', array(
                 'id' => $instance->id,
@@ -94,19 +96,18 @@ if (!empty($toggle_enrollments)) {
 }
 
 if (!empty($max_supervisors) or $max_supervisors === 0) {
-    $exists = $DB->get_record('course_ssis_metadata', array('field' => 'activitysupervisors', 'courseid' => $activity_id));
-    if ($exists) {
-        $DB->set_field('course_ssis_metadata', 'value', $max_supervisors, array('field' => 'activitysupervisors', 'courseid' => $activity_id));
+
+    $metadata = ActivityCenter::getCourseMetadata($activity_id);
+    if ($metadata) {
+        $DB->set_field(ActivityCenter::TABLE, 'activitysupervisors', $max_supervisors, array('courseid' => $activity_id));
     } else {
-        $data = new stdClass();
-        $data->field = 'activitysupervisors';
-        $data->courseid = $activity_id;
-        $data->value = $max_supervisors;
-        $DB->insert_record('course_ssis_metadata', $data, $returnid = false);
+        $row = new stdClass();
+        $row->courseid = $activity_id;
+        $row->activitysupervisors = $max_supervisors;
+        $DB->insert_record(ActivityCenter::TABLE, $row);
     }
-    cache_helper::purge_by_event('changesincourse');
 }
 
 if (!empty($max_participants)) {
-    $DB->set_field('enrol', 'customint3', $max_participants, array('courseid' => $activity_id, 'enrol' => 'self'));
+    $DB->set_field('enrol', 'customint3', $max_participants, array('courseid' => $activity_id, 'enrol' => ActivityCenter::ENROL_PLUGIN));
 }

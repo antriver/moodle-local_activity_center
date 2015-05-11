@@ -32,9 +32,9 @@ if (!empty($on_or_off)) {
 
     $buttons = '
     <ul class="buttons">
-    <a class="btn" href="?mode='.TOGGLEVISIBILITY.'&on_or_off=ON"><i class="icon-check"></i> Make all selected activities visible</a>
+    <a class="btn" href="?mode='.TOGGLEVISIBILITY.'&on_or_off=ON"><i class="fa fa-check-square-o"></i> Make all selected activities visible</a>
     <br />
-    <a class="btn" href="?mode='.TOGGLEVISIBILITY.'&on_or_off=OFF"><i class="icon-check-empty"></i> Make all selected activities invisible</a>
+    <a class="btn" href="?mode='.TOGGLEVISIBILITY.'&on_or_off=OFF"><i class="fa fa-square-o"></i> Make all selected activities invisible</a>
     </ul>
     ';
     echo $buttons;

@@ -28,7 +28,7 @@ if (empty($courseid)) {
 
         $button = '
         <ul class="buttons">
-        <a id="bulk_enrol" class="btn" href=""><i class="icon-plus-sign"></i> '.ENROL.': "'.$activity->fullname.'"</a>
+        <a id="bulk_enrol" class="btn" href=""><i class="fa fa-plus-circle"></i> '.ENROL.': "'.$activity->fullname.'"</a>
         </ul>
         <script>
         $("#bulk_enrol").on("click", function (e) {

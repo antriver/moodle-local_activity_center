@@ -6,8 +6,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-output_act_form("Enter the name of an activity here", "activities", SELECT);
-output_act_cat_form("Enter the category name here", "activity_categories", SELECT);
+echo '<div class="row-fluid">';
+    echo '<div class="span6">';
+        output_act_form("Enter the name of an activity here", "activities", SELECT);
+    echo '</div>';
+    echo '<div class="span6">';
+        output_act_cat_form("Enter the category name here", "activity_categories", SELECT);
+    echo '</div>';
+echo '</div>';
 
 $courseid = optional_param('courseid', '', PARAM_RAW);
 $remove = optional_param('remove', '', PARAM_RAW);
@@ -49,7 +55,7 @@ if (!empty($SESSION->dnet_activity_center_activities)) {
 
     ?>
     <ul class="buttons">
-    <a class="btn" href="?mode=<?= CLEAR ?>"><i class="icon-remove"></i> <?= CLEAR ?></a>
+    <a class="btn" href="?mode=<?= CLEAR ?>"><i class="fa fa-times"></i> <?= CLEAR ?></a>
     </ul>
     <?php
 }

@@ -8,6 +8,8 @@
 
 require_once('../../../config.php');
 
+use \local_activity_center\ActivityCenter;
+
 function get_user_activity_enrollments($idnumber) {
     global $DB;
 
@@ -31,7 +33,7 @@ function get_user_activity_enrollments($idnumber) {
     order by
         crs.fullname";
 
-    $params = array("self", $idnumber);
+    $params = array(ActivityCenter::ENROL_PLUGIN, $idnumber);
     return $DB->get_records_sql($sql, $params);
 }
 
@@ -49,7 +51,7 @@ function get_activity_selfenrol_instance($activity_id) {
     $enrolment_instances = enrol_get_instances($activity_id, true);
     $gotit = false;
     foreach ($enrolment_instances as $instance) {
-        if ($instance->enrol == 'self') {
+        if ($instance->enrol == ActivityCenter::ENROL_PLUGIN) {
             $gotit = $instance;
         }
     }

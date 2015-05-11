@@ -24,7 +24,7 @@ $(document).on('click', '.becomeActivityManagerList a', function(e)
 
 			'Yes': function() {
 				var ths = this;
-				$(this).children('.ui-dialog-content').html('<i class="icon-spinner icon-spin"></i> Saving...');
+				$(this).children('.ui-dialog-content').html('<i class="fa fa-spinner fa-spin"></i> Saving...');
 				$(this).parent().find('.ui-dialog-buttonpane').hide();
 
 				$.post('ajax/enrol.php', {action:'enrol', courseid:courseID}, function(res){
@@ -40,7 +40,7 @@ $(document).on('click', '.becomeActivityManagerList a', function(e)
 
 			'Remove me as supervisor': function() {
 				var ths = this;
-				$(this).children('.ui-dialog-content').html('<i class="icon-spinner icon-spin"></i> Saving...');
+				$(this).children('.ui-dialog-content').html('<i class="fa fa-spinner fa-spin"></i> Saving...');
 				$(this).parent().find('.ui-dialog-buttonpane').hide();
 
 				$.post('../ajax/remove.php?action=remove&courseid=' + courseID, {action:'remove', courseid:courseID}, function(res){

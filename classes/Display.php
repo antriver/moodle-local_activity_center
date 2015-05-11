@@ -17,19 +17,19 @@ class Display
     private $activityCenter;
     public $tabs = array( // Array of which tabs are shown in differnet modes
         'teacher' => array(
-            'overview' => array('teacher/index.php', '<i class="icon-ok-sign"></i> Overview'),
-            'goals' => array('teacher/goals.php', '<i class="icon-pencil"></i> Enter Your Goals'),
-            'pdframework' => array('teacher/pd-framework.php', '<i class="icon-star"></i> Choose PD Strand'),
-            'all-sec' => array('teacher/all-sec.php', '<i class="icon-rocket"></i> Pick Secondary Activities'),
-            'all-elem' => array('teacher/all-elem.php', '<i class="icon-rocket"></i> Pick Elementary Activities'),
+            'overview' => array('teacher/index.php', '<i class="fa fa-check-circle"></i> Overview'),
+            'goals' => array('teacher/goals.php', '<i class="fa fa-pencil"></i> Enter Your Goals'),
+            'pdframework' => array('teacher/pd-framework.php', '<i class="fa fa-star"></i> Choose PD Strand'),
+            'all-sec' => array('teacher/all-sec.php', '<i class="fa fa-rocket"></i> Pick Secondary Activities'),
+            'all-elem' => array('teacher/all-elem.php', '<i class="fa fa-rocket"></i> Pick Elementary Activities'),
         ),
         'admin' => array(
-            'activities' => array('session_mod.php?submode=activities&value=YES', '<i class="icon-rocket"></i> Modify Activities'),
-            'individuals' => array('session_mod.php?submode=individuals&value=YES', '<i class="icon-user"></i> Manage Individuals'),
-            'summary-sec' => array('session_mod.php?submode=individuals&value=YES', '<i class="icon-user"></i> Seconday Summary'),
-            'summary-elem' => array('session_mod.php?submode=individuals&value=YES', '<i class="icon-user"></i> Elementary Summary'),
+            'activities' => array('session_mod.php?submode=activities&value=YES', '<i class="fa fa-rocket"></i> Modify Activities'),
+            'individuals' => array('session_mod.php?submode=individuals&value=YES', '<i class="fa fa-user"></i> Manage Individuals'),
+            'summary-sec' => array('session_mod.php?submode=individuals&value=YES', '<i class="fa fa-user"></i> Seconday Summary'),
+            'summary-elem' => array('session_mod.php?submode=individuals&value=YES', '<i class="fa fa-user"></i> Elementary Summary'),
 
-            'newactivity' => array('view.php?view=newactivity', '<i class="icon-plus-sign"></i> Create New Activity')
+            'newactivity' => array('view.php?view=newactivity', '<i class="fa fa-plus-circle"></i> Create New Activity')
         ),
     );
 
@@ -40,13 +40,13 @@ class Display
         global $PAGE, $OUTPUT;
         $this->output = $OUTPUT;
 
-        $PAGE->requires->js(ActivityCenter::PATH . 'assets/js/bindWithDelay.js');
-        $PAGE->requires->js(ActivityCenter::PATH . 'assets/js/filter.js');
-
-        #$PAGE->requires->css('/blocks/homework/assets/css/homework.css');
-
+        $PAGE->add_body_class('activity-center');
         $PAGE->requires->css(ActivityCenter::PATH . 'assets/css/activitycenter.css');
         $PAGE->requires->jquery();
+        $PAGE->requires->jquery_plugin('ui');
+        $PAGE->requires->jquery_plugin('ui-css');
+        $PAGE->requires->js(ActivityCenter::PATH . 'assets/js/bindWithDelay.js');
+        $PAGE->requires->js(ActivityCenter::PATH . 'assets/js/filter.js');
         $PAGE->requires->js(ActivityCenter::PATH . 'assets/js/activitycenter.js?v=3');
     }
 
@@ -84,9 +84,9 @@ class Display
         }
 
         $modeLabels = array(
-            'teacher' => '<i class="icon-magic"></i> Teacher Mode',
-            'student' => '<i class="icon-user"></i> Student Mode',
-            'admin' => '<i class="icon-wrench"></i> Activity Admin Mode',
+            'teacher' => '<i class="fa fa-magic"></i> Teacher Mode',
+            'student' => '<i class="fa fa-user"></i> Student Mode',
+            'admin' => '<i class="fa fa-wrench"></i> Activity Admin Mode',
         );
 
         $t = '<div class="tabs noborder">';
@@ -134,7 +134,7 @@ class Display
         $ret .= '</textarea>';
 
         $ret .= '<ul class="buttons"><br />';
-        $ret .= '<a id="submit_button" href="'.$CFG->wwwroot.'" class="btn"><i class="icon-plus-sign "></i> (Re-)submit This Goal</a>';
+        $ret .= '<a id="submit_button" href="'.$CFG->wwwroot.'" class="btn"><i class="fa fa-plus-circle"></i> (Re-)submit This Goal</a>';
         $ret .= '</ul>';
         $ret .= '
             <script>
@@ -273,7 +273,7 @@ class Display
         $ret .= '</form>';
 
         $ret .= '<ul class="buttons"><br />';
-        $ret .= '<a id="submit_button" href="'.$CFG->wwwroot.'" class="btn"><i class="icon-plus-sign "></i> (Re-)submit This Choice</a>';
+        $ret .= '<a id="submit_button" href="'.$CFG->wwwroot.'" class="btn"><i class="fa fa-plus-circle"></i> (Re-)submit This Choice</a>';
         $ret .= '</ul>';
         $ret .= '
             <script>
@@ -593,7 +593,7 @@ class Display
                             $matches[1][$i] = 'ALL';
                         }
 
-                        $icon = '<i class="pull-right icon-text">' . $matches[1][$i] . '</i>';
+                        $icon = '<i class="pull-right fa fa-text">' . $matches[1][$i] . '</i>';
                         $course->fullname = str_replace($matchedText, $icon, $course->fullname);
                         $course->fullname = trim($course->fullname);
                     }
@@ -605,7 +605,7 @@ class Display
                 $r .= '<span>' . $supervisorCount . '/' . $supervisorsNeeded . ' supervisors</span>';
 
                 if ($iamasupervisor) {
-                    $r .= '<span><i class="icon-heart"></i> You are a supervisor! <i class="icon-heart"></i></span>';
+                    $r .= '<span><i class="icon-heart"></i> You are a supervisor! <i class="fa fa-heart"></i></span>';
                 }
 
                 $r .= '<span class="desc" style="display:none;">' . htmlentities($course->summary) . '</span>';

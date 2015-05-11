@@ -41,7 +41,7 @@ if (!empty($SESSION->dnet_activity_center_individuals)) {
 
     ?>
     <ul class="buttons">
-    <a class="btn" href="?mode=<?= CLEAR ?>"><i class="icon-remove"></i> <?= CLEAR ?></a>
+    <a class="btn" href="?mode=<?= CLEAR ?>"><i class="fa fa-times"></i> <?= CLEAR ?></a>
     </ul>
     <?php
 }

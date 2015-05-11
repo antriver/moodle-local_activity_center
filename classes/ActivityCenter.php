@@ -10,9 +10,12 @@ namespace local_activity_center;
 
 class ActivityCenter
 {
+    const PATH = '/local/activity_center/';
+    const TABLE = 'local_activity_center_crs';
+    const ENROL_PLUGIN = 'enrol_self_parents';
+
 	public $data;
 	public $display;
-	const PATH = '/local/activity_center/';
 	public $activityCourseCategory = 1;
 
 	function __construct() {
@@ -87,7 +90,7 @@ class ActivityCenter
 
 		global $SESSION, $USER;
 
-		require_once dirname(dirname(__DIR__)) . '/dnet_common/sharedlib.php';
+		require_once dirname(__DIR__) . '/sharedlib.php';
 
 		if (is_admin() or is_activities_head()) {
 			return array('admin', 'teacher');
@@ -173,4 +176,10 @@ class ActivityCenter
 		// ^ that doesn't return anything, so we have to assume it worked...
 		return true;
 	}
+
+
+    public static function getCourseMetadata($courseid) {
+        global $DB;
+        return $DB->get_record(static::TABLE, array('courseid' => $courseid));
+    }
 }

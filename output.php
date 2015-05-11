@@ -10,6 +10,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once 'portables.php';
 require_once 'activities.php';
 
+use \local_activity_center\ActivityCenter;
+
 // Some display stuff
 function output_begin_table($message) {
     echo '<div>$message</div><br />';
@@ -21,41 +23,37 @@ function output_end_table() {
 }
 
 function output_tabs($kind, $tabs, $mode_name="mode") {
-    // output the tabs
-    $li = '';
-    $size = count($tabs);
-    for ($i = 0; $i < $size; ++$i) {
-        $label = $tabs[$i];
-        if ($label == $kind) {
-            $pre = "<span class=\"selected\">";
-            $post = "</span>";
+
+    if (count($tabs) < 1) {
+        return '';
+    }
+
+    $t = '<div class="tabs text-center">';
+    $t .= '<div class="btn-group">';
+
+    foreach ($tabs as $label) {
+
+        if ($label == START_AGAIN && (is_admin() or is_activities_head())) {
+            $href = derive_plugin_path_from("session_mod.php?submode=&value=NO");
         } else {
-            if ($label == START_AGAIN && (is_admin() or is_activities_head())) {
-                $pre = '<a href="'.derive_plugin_path_from("session_mod.php?submode=&value=NO").'">';
-                $post = "</a>";
-            } else {
-                $pre = '<a href="'.derive_plugin_path_from("index.php?".$mode_name."={$label}").'">';
-                $post = "</a>";
-            }
+            $href = derive_plugin_path_from("index.php?".$mode_name."={$label}");
         }
 
-        // TODO: Add an icon feature
         $icon = '';
         if ($icon_defined = array_search($label, get_defined_constants(), true)) {
             if ($which_icon = constant($icon_defined.'_ICON')) {
-                $icon = '<i class="icon-'.$which_icon.'"></i> ';
+                $icon = '<i class="fa fa-'.$which_icon.'"></i> ';
             }
         }
-        $li .= "<li id=\"tab_topic_{$i}\">{$pre}{$icon}{$label}{$post}</li>";
+
+        $t .= '<a class="btn btn-sm btn-small ' . ($label == $kind ? ' active': '') . '" href="' . $href . '">';
+        $t .= $icon . $label;
+        $t .= '</a>';
     }
-    echo '
-<div class="single-section">
-    <div class="tabs">
-        <ul>
-            '.$li.'
-        </ul>
-    </div>
-</div>';
+
+    $t .= '</div></div>';
+
+    echo $t;
 }
 
 function activity_box($activity, $remove=false) {
@@ -71,12 +69,16 @@ function activity_box($activity, $remove=false) {
 
     $row->cells[0] = new html_table_cell();
     $row->cells[0]->attributes['class'] = 'left side';
-    $icon = $DB->get_record('course_ssis_metadata', array("courseid" => $activity->id));
+
+    /*$icon = $DB->get_record('course_ssis_metadata', array("courseid" => $activity->id));
     if (!empty($icon)) {
-        $row->cells[0]->text = '<i style="margin-left:20px;" class="icon-'.$icon->value.' icon-4x"></i>';
+        $row->cells[0]->text = '<i style="margin-left:20px;" class="fa fa-'.$icon->value.' fa-4x"></i>';
     } else {
         $row->cells[0]->text = "";
-    }
+    }*/
+
+
+    $row->cells[0]->text = ""; // Course icon used to be shown here.
 
     $row->cells[1] = new html_table_cell();
     $row->cells[1]->attributes['class'] = 'content';
@@ -146,7 +148,7 @@ function activity_box($activity, $remove=false) {
 
     });
     </script>";
-    $edit_name = '&nbsp;&nbsp;<a id="rename_'.$activity->id.'"   href="#"><i class="icon-cog"></i></a>&nbsp;&nbsp;';
+    $edit_name = '&nbsp;&nbsp;<a id="rename_'.$activity->id.'"   href="#"><i class="fa fa-cog"></i></a>&nbsp;&nbsp;';
     $row->cells[1]->text = '<div class="username">'.$activity->fullname.$edit_name.' ('. $cat_text.')</div>';
     $row->cells[1]->text .= $dialog.$script;
     $row->cells[1]->text .= '<table class="userinfotable">';
@@ -156,17 +158,17 @@ function activity_box($activity, $remove=false) {
     if ($remove) {
         $row->cells[1]->text .= '<tr>
             <td style="width:220px;">Remove from list:</td>
-            <td><a href="?mode='.SELECT.'&courseid='.$activity->id.'&remove=YES"><i class="icon-remove"></i></a></td>
+            <td><a href="?mode='.SELECT.'&courseid='.$activity->id.'&remove=YES"><i class="fa fa-times"></i></a></td>
         </tr>';
 
-        $allow_new_enrollments = YESno($instance->customint6);
+        $allow_new_enrollments = $instance ? YESno($instance->customint6) : '';
 
         // Visibility
-        $icon = $activity->visible ? 'icon-check' : 'icon-check-empty';
+        $icon = $activity->visible ? 'fa-check-square-o' : 'fa-square-o';
         $visibility = YESno($activity->visible);
         $row->cells[1]->text .= '<tr>
             <td>'."Visible (in user's menus)".'</td>
-            <td><a id="'.$activity->id.'_toggle_vis" href=""><i class="'.$icon.'"></i></a></td>
+            <td><a id="'.$activity->id.'_toggle_vis" href=""><i class="fa '.$icon.'"></i></a></td>
             <script>
             $("#'.$activity->id.'_toggle_vis").on("click", function (e) {
                 e.preventDefault();
@@ -197,10 +199,10 @@ function activity_box($activity, $remove=false) {
         </tr>';
 
         // Allow new enrollments
-        $icon = $allow_new_enrollments == "YES" ? 'icon-check' : 'icon-check-empty';
+        $icon = $allow_new_enrollments == "YES" ? 'fa-check-square-o' : 'fa-square-o';
         $row->cells[1]->text .= '<tr>
             <td>'."Allow new enrollments".'</td>
-            <td><a id="'.$activity->id.'_toggle_ne" href=""><i class="'.$icon.'"></i></a></td>
+            <td><a id="'.$activity->id.'_toggle_ne" href=""><i class="fa '.$icon.'"></i></a></td>
         </tr>
         <script>
         $("#'.$activity->id.'_toggle_ne").on("click", function (e) {
@@ -236,10 +238,10 @@ function activity_box($activity, $remove=false) {
     $row->cells[1]->text .= '<tr>
         <td>Convenient Links:</td>
         <td>
-        <a target="_blank" href="'.$CFG->wwwroot.'/course/view.php?id='.$activity->id.'"><i class="icon-rocket"></i> Activity Page</a>&nbsp;&nbsp;&nbsp;
-        <a target="_blank" href="'.$CFG->wwwroot.'/course/edit.php?id='.$activity->id.'"><i class="icon-cogs"></i> Course Settings</a>&nbsp;&nbsp;&nbsp;
-        <a target="_blank" href="'.$CFG->wwwroot.'/enrol/self/edit.php?courseid='.$activity->id.'&id='.$instance->id.'"><i class="icon-dashboard"></i> Enrolment Settings</a>&nbsp;&nbsp;&nbsp;
-        <a target="_blank" href="'.$CFG->wwwroot.'/enrol/users.php?id='.$activity->id.'"><i class="icon-user"></i> Enrolled Users</a>&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="'.$CFG->wwwroot.'/course/view.php?id='.$activity->id.'"><i class="fa fa-rocket"></i> Activity Page</a>&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="'.$CFG->wwwroot.'/course/edit.php?id='.$activity->id.'"><i class="fa fa-cogs"></i> Course Settings</a>&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="'.$CFG->wwwroot.'/enrol/' . ActivityCenter::ENROL_PLUGIN . '/edit.php?courseid='.$activity->id.'&id='. ($instance ? $instance->id : '') .'"><i class="fa fa-tachometer"></i> Enrolment Settings</a>&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="'.$CFG->wwwroot.'/enrol/users.php?id='.$activity->id.'"><i class="fa fa-user"></i> Enrolled Users</a>&nbsp;&nbsp;&nbsp;
         </td>
     </tr>';
 
@@ -255,7 +257,8 @@ function activity_box($activity, $remove=false) {
         array( "id" => $participant_role, "name" => "# Participants (students only):")
         );
 
-    $context = get_context_instance(CONTEXT_COURSE, $activity->id, true);
+    //$context = get_context_instance(CONTEXT_COURSE, $activity->id, true);
+    $context = context_course::instance($activity->id);
 
     foreach ($role_info as $role) {
         $role_id = $role["id"];
@@ -288,7 +291,7 @@ function activity_box($activity, $remove=false) {
 
     }
 
-    $max_participants = $DB->get_field('enrol', 'customint3', array('courseid' => $activity->id, 'enrol' => 'self'));
+    $max_participants = $DB->get_field('enrol', 'customint3', array('courseid' => $activity->id, 'enrol' => ActivityCenter::ENROL_PLUGIN));
 
     $dialog = '<div id="dialog_adjust_max_participants_'.$activity->id.'" title="Edit Max Participants" style="display:none"> Enter the maximum number of participants:
     <form id="dialog_adjust_max_participants_'.$activity->id.'" action="'.derive_plugin_path_from('activity_mods.php').'">
@@ -347,20 +350,21 @@ function activity_box($activity, $remove=false) {
 
     });
     </script>";
-    $edit_name = '&nbsp;&nbsp;<a id="adjust_max_participants_'.$activity->id.'"   href="#"><i class="icon-cog"></i></a>&nbsp;&nbsp;';
+    $edit_name = '&nbsp;&nbsp;<a id="adjust_max_participants_'.$activity->id.'"   href="#"><i class="fa fa-cog"></i></a>&nbsp;&nbsp;';
     $row->cells[1]->text .= '<tr><td>'.'# Max participants'.'</td>';
     $row->cells[1]->text .= '<td>'.$max_participants.$edit_name.'</td></tr>';
     $row->cells[1]->text .= $dialog;
     $row->cells[1]->text .= $script;
 
-    $max_supervisors = $DB->get_field('course_ssis_metadata', 'value', array('field' => 'activitysupervisors', 'courseid' => $activity->id));
+    $metadata = ActivityCenter::getCourseMetadata($activity->id);
+    $max_supervisors = $metadata ? $metadata->activitysupervisors : null;
 
     $dialog = '<div id="dialog_adjust_max_supervisors_'.$activity->id.'" title="Edit Max Supervisors" style="display:none"> Enter the maximum number of supervisors:
     <form id="dialog_adjust_max_supervisors_'.$activity->id.'" action="'.derive_plugin_path_from('activity_mods.php').'">
     <input name="activity_id" type="hidden" value="'.$activity->id.'" />
     <input id="dialog_adjust_max_supervisors_input_'.$activity->id.'" style="width:100%;margin-top:5px;" name="new_name" autofocus="autofocus" size="100" onclick="this.select()" type="text" value="'.$max_supervisors.'" />
     </form>
-    .</div>';
+    </div>';
     $script = "<script>
 
     $('#dialog_adjust_max_supervisors_".$activity->id."').on(\"submit\", function (e) {
@@ -412,7 +416,7 @@ function activity_box($activity, $remove=false) {
 
     });
     </script>";
-    $edit_name = '&nbsp;&nbsp;<a id="adjust_max_supervisors_'.$activity->id.'"   href="#"><i class="icon-cog"></i></a>&nbsp;&nbsp;';
+    $edit_name = '&nbsp;&nbsp;<a id="adjust_max_supervisors_'.$activity->id.'"   href="#"><i class="fa fa-cog"></i></a>&nbsp;&nbsp;';
 
     $row->cells[1]->text .= '<tr><td>'.'# Max supervisors'.'</td>';
 
@@ -453,7 +457,7 @@ function user_box($user, $remove=false) {
     if ($remove) {
         $row->cells[1]->text .= '<tr>
             <td>Remove from list:</td>
-            <td><a href="?mode='.SELECT.'&powerschool='.$user->idnumber.'&remove=YES"><i class="icon-remove"></i></a></td>
+            <td><a href="?mode='.SELECT.'&powerschool='.$user->idnumber.'&remove=YES"><i class="fa fa-times"></i></a></td>
         </tr>';
     }
 
@@ -468,7 +472,7 @@ function user_box($user, $remove=false) {
         $deenrol_button = "";
         if ($remove == "YES") {
             $deenrol_click = "deenrol_".$activity->course_id.'_'.$user->id;
-            $deenrol_button = ' <a id="'.$deenrol_click.'" href=""><i class="icon-minus-sign"></i></a>';
+            $deenrol_button = ' <a id="'.$deenrol_click.'" href=""><i class="fa fa-minus-circle"></i></a>';
             $deenrol_button .= '<script>
                 $("#'.$deenrol_click.'").on("click", function (e) {
                     e.preventDefault();
@@ -512,13 +516,20 @@ function user_box($user, $remove=false) {
     echo html_writer::table($table);
 }
 
+
 function output_submode_choice($kind, $tabs, $mode_name="mode") {
-    // output the tabs
-    $li = '';
-    $size = count($tabs);
-    for ($i = 0; $i < $size; ++$i) {
-        $url = null;
-        $label = $tabs[$i];
+
+    if (count($tabs) < 1) {
+        return '';
+    }
+
+    $t = '<div class="tabs text-center">';
+    $t .= '<div class="btn-group">';
+
+
+    foreach ($tabs as $label) {
+        $icon = null;
+        $href = null;
         $label_lower = str_replace(" ", "", strtolower($label));
         switch ($label_lower) {
             case "manageactivities":
@@ -528,47 +539,47 @@ function output_submode_choice($kind, $tabs, $mode_name="mode") {
                 $icon = "user";
                 break;
             case 'createnewactivity':
-                $icon = "plus-sign";
-                $url = '../view.php?view=newactivity';
+                $icon = "plus-circle";
+                $href = '../view.php?view=newactivity';
                 break;
             case 'exportpdchoices':
                 $icon = "download";
-                $url = '../teacher/export.php';
+                $href = '../teacher/export.php';
                 break;
             case 'secsummaryreport':
                 $icon = "download";
-                $url = '../teacher/summary-sec.php';
+                $href = '../teacher/summary-sec.php';
                 break;
             case 'elemsummaryreport':
                 $icon = "download";
-                $url = '../teacher/summary-elem.php';
+                $href = '../teacher/summary-elem.php';
                 break;
             case "becometeacher":
                 $icon = "magic";
-                $url = '../teacher';
+                $href = '../teacher';
                 break;
         }
 
-        if (!$url) {
-            $url = derive_plugin_path_from("session_mod.php?submode=".$label_lower."&value=YES");
+        if (!$href) {
+            $href = derive_plugin_path_from("session_mod.php?submode=".$label_lower."&value=YES");
         }
 
-        $pre = '<li><a class="btn" href="'.$url.'">';
-        $post = "</a></li>";
-
-        $li .= "{$pre}<i class=\"icon-".$icon."\"></i> {$label}{$post}
-";
+        $t .= '<a class="btn btn-sm btn-small ' . ($label == $kind ? ' active': '') . '" href="' . $href . '">';
+        if ($icon) {
+            $t .= '<i class="fa fa-' . $icon . '"></i> ';
+        }
+        $t .= $label;
+        $t .= '</a>';
     }
-    echo '
-<ul class="buttons">
-        '.$li.'
-</ul>
-';
+
+    $t .= '</div></div>';
+
+    echo $t;
 }
 
 function output_act_form($placeholder="Type something, dude", $kind="activities", $mode="") {
     $path_to_index = "";
-    $path_to_query = "../../dnet_common/query/{$kind}.php";
+    $path_to_query = "/local/activity_center/query/{$kind}.php";
 
     ?>
 <form id="activity_user_entry" action="" method="get">
@@ -603,7 +614,7 @@ $("#activity").autocomplete({
 
 function output_act_cat_form($placeholder="Type something, dude", $kind="students", $mode="") {
     $path_to_index = "";
-    $path_to_query = "../../dnet_common/query/{$kind}.php";
+    $path_to_query = "/local/activity_center/query/{$kind}.php";
 
     ?>
 <form id="cat_user_entry" action="" method="get">
@@ -638,7 +649,7 @@ $("#activity_cat").autocomplete({
 
 function output_forms($placeholder="Type something, dude", $kind="students", $mode="") {
     $path_to_index = "";
-    $path_to_query = "../../dnet_common/query/{$kind}.php";
+    $path_to_query = "/local/activity_center/query/{$kind}.php";
 
     ?>
 <form id="user_entry" action="" method="get">

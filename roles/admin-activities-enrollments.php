@@ -38,9 +38,9 @@ if (!empty($on_or_off)) {
 
     $buttons = '
     <ul class="buttons">
-    <a class="btn" href="?mode='.TOGGLEENROLLMENTS.'&on_or_off=ON"><i class="icon-check"></i> Turn on enrollments for selected activities</a>
+    <a class="btn" href="?mode='.TOGGLEENROLLMENTS.'&on_or_off=ON"><i class="fa fa-check-square-o"></i> Turn on enrollments for selected activities</a>
     <br />
-    <a class="btn" href="?mode='.TOGGLEENROLLMENTS.'&on_or_off=OFF"><i class="icon-check-empty"></i> Turn off enrollments for selected activities</a>
+    <a class="btn" href="?mode='.TOGGLEENROLLMENTS.'&on_or_off=OFF"><i class="fa fa-square-o"></i> Turn off enrollments for selected activities</a>
     </ul>
     ';
     echo $buttons;

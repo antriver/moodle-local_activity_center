@@ -321,28 +321,15 @@ order by goals desc';
 	 */
 	public function addSelfEnrolmentToActivityCourse($course, $maxEnrolledUsers = 0, $parentsCanEnrol = 1) {
 
-		//Load the cohort sync enrolment plugin
-		$plugin = enrol_get_plugin('self');
+		$plugin = enrol_get_plugin(ActivityCenter::ENROL_PLUGIN);
 
-		//Enrol teachers as students (enabled by default)
-		return $plugin->add_instance(
-			$course,
-			array(
-				'name' => 'Self Enrolment (Student)',
-				'roleid' => self::STUDENT_ROLE_ID,
-				'status' => ENROL_INSTANCE_ENABLED,
-				'password' => '',
-				'customint1' => 1,
-				'customint2' => 0,
-				'customint3' => $maxEnrolledUsers,
-				'customint4' => 0,
-				'customtext1' => '',
-				'customint5' => 0,
-				'customint6' => 1,
-				'customint7' => 0,
-				'customint8' => $parentsCanEnrol
-			)
-		);
+        $options = $plugin->get_instance_defaults();
+        $options['name'] = 'Self and Parent Enrolment (Student)';
+        $options['status'] = ENROL_INSTANCE_ENABLED;
+        $options['customint3'] = $maxEnrolledUsers;
+        $options['customint8'] = $parentsCanEnrol;
+
+		return $plugin->add_instance($course, $options);
 	}
 
 

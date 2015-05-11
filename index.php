@@ -6,10 +6,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once '../../config.php';
-require_once 'portables.php';
-require_once 'sharedlib.php';
-require_once '../../cohort/lib.php';
+require_once('../../config.php');
+require_once('portables.php');
+require_once('sharedlib.php');
+require_once('../../cohort/lib.php');
+
+use \local_activity_center\ActivityCenter;
 
 require_login();
 
@@ -29,11 +31,8 @@ if (is_admin() or is_activities_head()) {
 
     redirect('teacher/index.php');
 
-}  else if (is_student()) {
+} else if (is_student()) {
 
     redirect('student/index.php');
-
-}  else if (is_parent()) {
-
 
 }
