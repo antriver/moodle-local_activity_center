@@ -23,10 +23,12 @@ function cohort_is_member_by_idnumber($cohortidnumber, $userid) {
 }
 
 function is_activities_head() {
+    global $USER;
     return cohort_is_member_by_idnumber('activitiesHEAD', $USER->id);
 }
 
 function is_secretary() {
+    global $USER;
     if (is_admin()) {
         return true;
     }
@@ -34,6 +36,7 @@ function is_secretary() {
 }
 
 function is_teacher() {
+    global $USER;
     if (is_admin()) {
         return true;
     }
@@ -41,6 +44,7 @@ function is_teacher() {
 }
 
 function is_student() {
+    global $USER;
     if (is_admin()) {
         return true;
     }
@@ -48,6 +52,7 @@ function is_student() {
 }
 
 function is_parent() {
+    global $USER;
     if (is_admin()) {
         return true;
     }
