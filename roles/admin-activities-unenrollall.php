@@ -17,7 +17,7 @@ if ($confirm == "YES") {
 
     $selfenrolment = enrol_get_plugin('self');
     foreach ($SESSION->dnet_activity_center_activities as $activity_id) {
-        $context = get_context_instance(CONTEXT_COURSE, $activity_id, true);
+        $context = context_course::instance($activity_id);
         foreach(array(STUDENT_ROLE_ID, PARENT_ROLE_ID) as $role_id) {
             $users = get_role_users($role_id, $context);
             $enrolment_instances = enrol_get_instances($activity_id, true);

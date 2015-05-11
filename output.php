@@ -257,7 +257,6 @@ function activity_box($activity, $remove=false) {
         array( "id" => $participant_role, "name" => "# Participants (students only):")
         );
 
-    //$context = get_context_instance(CONTEXT_COURSE, $activity->id, true);
     $context = context_course::instance($activity->id);
 
     foreach ($role_info as $role) {

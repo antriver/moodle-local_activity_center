@@ -43,7 +43,7 @@ if ($enrol == "BULKENROL") {
     $user_id = required_param('user_id', PARAM_RAW);
     $activity_id = required_param('activity_id', PARAM_RAW);
 
-    if( !$context = get_context_instance(CONTEXT_COURSE, $activity_id, MUST_EXIST) ) {
+    if (!$context = context_course::instance($activity_id)) {
         //return "-1 Could not get context for course ".$short_name." with ID ".$activity_id;
     }
 

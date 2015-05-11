@@ -39,7 +39,7 @@ function get_user_activity_enrollments($idnumber) {
 
 
 function get_user_roles_in_activity($userid, $courseid) {
-    $context = get_context_instance(CONTEXT_COURSE, $courseid, true);
+    $context = context_course::instance($courseid);
     return get_user_roles($context, $userid, true);
 }
 
