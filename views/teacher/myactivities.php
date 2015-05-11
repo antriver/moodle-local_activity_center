@@ -6,7 +6,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-echo $OUTPUT->sign('ok-sign', 'Your Activities', 'These are the activities you currently supervise.');
+sign('ok-sign', 'Your Activities', 'These are the activities you currently supervise.');
 
 $managedActivities = $activityCenter->data->getActivitiesManaged(false, $activityCenter->getUserID());
 

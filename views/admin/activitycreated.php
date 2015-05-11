@@ -18,4 +18,4 @@ if ($courseID) {
 	$signText .= '<p><a class="btn" href="/course/view.php?id=' . $courseID . '">Go to activity</a></p>';
 }
 
-echo $OUTPUT->sign('ok-sign', 'Activity Created', $signText);
+sign('ok-sign', 'Activity Created', $signText);
