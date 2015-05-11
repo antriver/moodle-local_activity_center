@@ -61,14 +61,14 @@ class Display
 
         $t .= $this->modeTabs();
 
-        $t .= '<div class="tabs">';
-            $t .= '<ul>';
-            foreach ($tabs as $name => $tab) {
-                $t .= '<li>';
-                    $t .= '<a ' . ($name == $current ? 'class="selected"' : '') . 'href="' . $this->activityCenter->getPath() . $tab[0] . '">' . $tab[1] . '</a>';
-                $t .= '</li>';
-            }
-            $t .= '</ul>';
+        $t = '<div class="tabs text-center">';
+        $t .= '<div class="btn-group">';
+
+        foreach ($tabs as $name => $tab) {
+            $t .= '<a class="btn btn-sm btn-small ' . ($name == $current ? 'active' : '') . '" href="' . $this->activityCenter->getPath() . $tab[0] . '">' . $tab[1] . '</a>';
+        }
+
+        $t .= '</div>';
         $t .= '</div>';
 
         return $t;
@@ -89,14 +89,14 @@ class Display
             'admin' => '<i class="fa fa-wrench"></i> Activity Admin Mode',
         );
 
-        $t = '<div class="tabs noborder">';
-        $t .= '<ul class="additional-tabs">';
+        $t = '<div class="tabs text-center">';
+        $t .= '<div class="btn-group">';
+
         foreach ($possibleModes as $mode) {
-            $t .= '<li>';
-            $t .= '<a ' . ($mode == $currentMode ? 'class="selected"' : '') . 'href="' . $this->activityCenter->getPath() . 'changemode.php?mode=' . $mode . '">' . $modeLabels[$mode] . '</a>';
-            $t .= '</li>';
+            $t .= '<a class="btn btn-sm btn-small ' . ($mode == $currentMode ? 'active' : '') . '" href="' . $this->activityCenter->getPath() . 'changemode.php?mode=' . $mode . '">' . $modeLabels[$mode] . '</a>';
         }
-        $t .= '</ul>';
+
+        $t .= '</div>';
         $t .= '</div>';
 
         return $t;
