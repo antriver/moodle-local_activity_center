@@ -16,7 +16,7 @@ $activityCenter->setCurrentMode('admin');
 
 echo $activityCenter->display->showTabs('admin', 'summary-elem');
 
-echo $OUTPUT->sign('rocket', 'Elementary Activty Report', 'Lists what everyone chose for their PD and Activities');
+sign('rocket', 'Elementary Activty Report', 'Lists what everyone chose for their PD and Activities');
 
 $info = $activityCenter->data->getUsersSummary('teachersELEM');
 echo $activityCenter->display->summaryList($info);

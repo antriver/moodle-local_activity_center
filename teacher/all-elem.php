@@ -16,7 +16,7 @@ $activityCenter->setCurrentMode('teacher');
 
 echo $activityCenter->display->showTabs('teacher', 'all-elem');
 
-echo $OUTPUT->sign('rocket', 'All Elementary Activities', 'This page shows all the activities available. Click on an Activity you would like to supervise.');
+sign('rocket', 'All Elementary Activities', 'This page shows all the activities available. Click on an Activity you would like to supervise.');
 
 $activities = $activityCenter->data->getActivities(false, false, $path = '/1/118/%');
 echo $activityCenter->display->activityList($activities, false, 'becomeActivityManagerList');
