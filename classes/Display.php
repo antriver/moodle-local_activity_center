@@ -432,7 +432,7 @@ class Display
 
         $conflict = false;
         if ($pd_data->season and $something = $info_by_seasons[$pd_data->season]) {
-            echo $this->output->sign('question-sign', 'Note: PD and Activities Conflict', 'Are you sure you want to double-book yourself like that? Please double check your choices', 'redAlert alert-danger');
+            sign('question-sign', 'Note: PD and Activities Conflict', 'Are you sure you want to double-book yourself like that? Please double check your choices', 'redAlert alert-danger');
             $conflict = $pd_data->season;
         }
 
@@ -455,7 +455,7 @@ class Display
         $goal_data = json_decode($goal->data);
 
         if (!$goal_data) {
-            echo $this->output->sign("plus-sign", 'No Goal Entered', 'Click "Enter Your Goal" tab to enter it.', 'redAlert alert-danger');
+            sign("plus-sign", 'No Goal Entered', 'Click "Enter Your Goal" tab to enter it.', 'redAlert alert-danger');
         } else {
             echo $starttable;
             foreach ($goal_array as $item) {
