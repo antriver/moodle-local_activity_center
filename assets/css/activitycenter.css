@@ -1,0 +1,25 @@
+a.btn-mine,
+a.btn-mine:hover,
+a.btn-mine:active,
+a.btn-mine.active,
+a.btn-mine.disabled,
+a.btn-mine[disabled] {
+  text-shadow:none;
+  color: #FFFFFF;
+  background: #1662A3;
+}
+
+a.btn-mine:active,
+a.btn-mine.active {
+  background-color: #942a25 \9;
+}
+
+.ui-autocomplete-input {
+    width:100%;
+    font-size:18px;
+    margin-bottom:5px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding:10px;
+}
