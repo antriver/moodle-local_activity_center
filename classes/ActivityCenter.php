@@ -12,7 +12,7 @@ class ActivityCenter
 {
     const PATH = '/local/activity_center/';
     const TABLE = 'local_activity_center_crs';
-    const ENROL_PLUGIN = 'enrol_self_parents';
+    const ENROL_PLUGIN = 'self_parents';
 
 	public $data;
 	public $display;
