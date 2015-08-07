@@ -333,11 +333,10 @@ order by goals desc';
 	}
 
 
-	public function getActivitiesHeadCohortID() {
+	public function getActivitiesHeadCohortID(){
 
-		global $CFG;
-		require_once $CFG->dirroot . '/cohort/lib.php';
-		return cohort_get_id('activitiesHEAD');
+		global $DB;
+        return $DB->get_field('cohort', 'id', ['idnumber' => 'activitiesHEAD']);
 	}
 
 	public function addActivitiesHeadCohortSync($course) {

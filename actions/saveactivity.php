@@ -19,7 +19,7 @@ switch ($action) {
     case 'add':
 
         if ($activityCenter->getCurrentMode() != 'admin') {
-            die("You need to be in student or teacher mode to add homework.");
+            die("You need to be an admin to create an activity.");
         }
 
         $name = required_param('name', PARAM_RAW);
@@ -33,10 +33,9 @@ switch ($action) {
         // Create the new course
 
         $seasonString = 'S' . implode(',S', $season);
-
-         if ($seasonString === 'S1,S2,S3') {
-                $seasonString = 'ALL';
-   }
+        if ($seasonString === 'S1,S2,S3') {
+            $seasonString = 'ALL';
+        }
 
         $shortname = strtoupper($name);
         $shortname = str_replace(' ', '', $shortname);
@@ -56,14 +55,24 @@ switch ($action) {
         }
 
         // Save the season and supervisors
-        require_once $CFG->libdir . '/ssismetadata.php';
-        $metadata = new \ssismetadata();
-
-        $metadata->setCourseField($course->id, 'activitysupervisors', $supervisors);
-        $metadata->setCourseField($course->id, 'activityseason', implode(',', $season));
+        //require_once $CFG->libdir . '/ssismetadata.php';
+        //$metadata = new \ssismetadata();
+        //$metadata->setCourseField($course->id, 'activitysupervisors', $supervisors);
+        //$metadata->setCourseField($course->id, 'activityseason', implode(',', $season));
 
         // Add the required enrolment methods...
         $activityCenter->data->addSelfEnrolmentToActivityCourse($course, $maxEnrolledUsers, $parentsCanEnrol);
+
+        // Add a self enrolment method...
+        require_once($CFG->libdir . '/enrollib.php');
+        $plugin = enrol_get_plugin('guest');
+        $plugin->add_instance(
+            $course,
+            array(
+                'name' => 'Guest access',
+                'status' => ENROL_INSTANCE_ENABLED
+            )
+        );
 
         // Add manager cohort sync
         $activityCenter->data->addActivitiesHeadCohortSync($course);
