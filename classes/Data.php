@@ -317,7 +317,7 @@ order by goals desc';
 	}
 
     public function addEnrolmentInstances($course, $maxEnrolledUsers = 0, $parentsCanEnrol = 1) {
-        $this->addSelfEnrolmentToActivityCourse($course, $maxEnrolledUsers = 0, $parentsCanEnrol = 1);
+        $this->addSelfEnrolmentToActivityCourse($course, $maxEnrolledUsers, $parentsCanEnrol);
         $this->addActivitiesHeadCohortSync($course);
 
         // Add a self enrolment method...

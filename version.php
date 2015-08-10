@@ -8,7 +8,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2015081001; // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version = 2015081002; // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires = 2013111800; // MOODLE_26_STABLE
 $plugin->component = 'local_activity_center'; // Full name of the plugin (used for diagnostics)
 $plugin->dependencies = array(
