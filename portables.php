@@ -17,8 +17,8 @@ function setup_page() {
 
     $PAGE->set_context(context_system::instance());
     $PAGE->set_url(derive_plugin_path_from('index.php'));
-    $PAGE->set_title("Activities Hub");
-    $PAGE->set_heading("Activities Hub");
+    $PAGE->set_title(get_string('pagetitle', 'local_activity_center'));
+    $PAGE->set_heading(get_string('pagetitle', 'local_activity_center'));
 
     echo $OUTPUT->header();
 }
