@@ -316,6 +316,22 @@ order by goals desc';
 		print_object($users);
 	}
 
+    public function addEnrolmentInstances($course, $maxEnrolledUsers = 0, $parentsCanEnrol = 1) {
+        $this->addSelfEnrolmentToActivityCourse($course, $maxEnrolledUsers = 0, $parentsCanEnrol = 1);
+        $this->addActivitiesHeadCohortSync($course);
+
+        // Add a self enrolment method...
+/*      $plugin = enrol_get_plugin('guest');
+        $plugin->add_instance(
+            $course,
+            array(
+                'name' => 'Guest access',
+                'status' => ENROL_INSTANCE_ENABLED
+            )
+        );*/
+
+    }
+
 	/**
 	 * @param course Object of course data
 	 */

@@ -69,14 +69,14 @@
         </div>
     </div>
 
-    <div class="form-group">
+    <!--<div class="form-group">
         <label for="shared" class="col-md-3 control-label">How many supervisors does this activity need?</label>
         <div class="col-md-9">
 
-            <p><input type="text" class="form-control" name="supervisors" value="<?=(FORMACTION == 'edit' ? $editItem->activitysupervisors : 0)?>" /></p>
+            <p><input type="text" class="form-control" name="supervisors" value="<?=(FORMACTION == 'edit' && isset($editItem->activitysupervisors) ? $editItem->activitysupervisors : 0)?>" /></p>
 
         </div>
-    </div>
+    </div>-->
 
     <?php
     if (FORMACTION == 'add') {
