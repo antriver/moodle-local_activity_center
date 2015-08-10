@@ -48,6 +48,7 @@
         <label for="shared" class="col-md-3 control-label">Activity Name</label>
         <div class="col-md-9">
             <input type="text" id="title" name="name" class="form-control" placeholder="Name of the activity" value="<?=(FORMACTION == 'edit' ? $editItem->name : '')?>" />
+            <p><strong>Note:</strong> do not add (S1) etc. in the title. It is added automatically.</p>
         </div>
     </div>
 
