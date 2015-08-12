@@ -348,6 +348,30 @@ order by goals desc';
 		return $plugin->add_instance($course, $options);
 	}
 
+    /**
+     * Checks if a course already has the activitiesHEAD cohort sync enrolment method
+     */
+    public function getSelfEnrolmentInstances($courseid) {
+        $instances = enrol_get_instances($courseid);
+        $return = [];
+        foreach ($instances as $instance) {
+            if ($instance->enrol == ActivityCenter::ENROL_PLUGIN) {
+                $return[] = $instance;
+            }
+        }
+        return $return;
+    }
+
+    public function setSelfEnrolmentEnabled($courseid, $enabled = true) {
+        global $DB;
+        $instances = $this->getSelfEnrolmentInstances($courseid);
+        foreach ($instances as $instance) {
+            $DB->update_record('enrol', array(
+                'id' => $instance->id,
+                'customint6' => $enabled ? 1 : 0
+            ));
+        }
+    }
 
 	public function getActivitiesHeadCohortID(){
 
