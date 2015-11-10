@@ -25,14 +25,14 @@
 
                 function displayCategories($categories) {
 
-                    global $editiem;
+                    global $editItem;
                     foreach ($categories as $category) {
                         // For elementary we have to go deeper...
                         if ($category->id == 118) {
                             displayCategories($category->get_children());
                             continue;
                         }
-                        $selcted = FORMACTION == 'edit' && $editiem->categoryid == $category->id;
+                        $selected = FORMACTION == 'edit' && $editItem->categoryid == $category->id;
                         echo '<option value="' . $category->id . '"' . ($selected ? ' selected="selected"' : '').'>' . $category->name . '</option>';
                     }
                 }
@@ -47,7 +47,7 @@
     <div class="form-group">
         <label for="shared" class="col-md-3 control-label">Activity Name</label>
         <div class="col-md-9">
-            <input type="text" id="title" name="name" class="form-control" placeholder="Name of the activity" value="<?=(FORMACTION == 'edit' ? $editiem->name : '')?>" />
+            <input type="text" id="title" name="name" class="form-control" placeholder="Name of the activity" value="<?=(FORMACTION == 'edit' ? $editItem->name : '')?>" />
             <p><strong>Note:</strong> do not add (S1) etc. in the title. It is added automatically.</p>
         </div>
     </div>
@@ -55,7 +55,7 @@
     <div class="form-group">
         <label for="shared" class="col-md-3 control-label">Description</label>
         <div class="col-md-9">
-            <textarea name="summary" class="form-control" placeholder="Enter a description of the activity, including which days it runs?" rows="10"><?=(FORMACTION == 'edit' ? $editiem->summary : '')?></textarea>
+            <textarea name="summary" class="form-control" placeholder="Enter a description of the activity, including which days it runs?" rows="10"><?=(FORMACTION == 'edit' ? $editItem->summary : '')?></textarea>
         </div>
     </div>
 
@@ -74,7 +74,7 @@
         <label for="shared" class="col-md-3 control-label">How many supervisors does this activity need?</label>
         <div class="col-md-9">
 
-            <p><input type="text" class="form-control" name="supervisors" value="<?=(FORMACTION == 'edit' && isset($editiem->activitysupervisors) ? $editiem->activitysupervisors : 0)?>" /></p>
+            <p><input type="text" class="form-control" name="supervisors" value="<?=(FORMACTION == 'edit' && isset($editItem->activitysupervisors) ? $editItem->activitysupervisors : 0)?>" /></p>
 
         </div>
     </div>-->
