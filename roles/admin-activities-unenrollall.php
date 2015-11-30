@@ -15,7 +15,7 @@ if ($confirm == "YES") {
     // step through each activity, and unenroll all the non-managers and non-editors
     // special case for students who are also enrolled as editors, what to do?
 
-    $selfenrolment = enrol_get_plugin('self');
+    $enrolplugin = enrol_get_plugin(\local_activity_center\ActivityCenter::ENROL_PLUGIN);
     foreach ($SESSION->dnet_activity_center_activities as $activity_id) {
         $context = context_course::instance($activity_id);
         foreach(array(STUDENT_ROLE_ID, PARENT_ROLE_ID) as $role_id) {
@@ -23,9 +23,9 @@ if ($confirm == "YES") {
             $enrolment_instances = enrol_get_instances($activity_id, true);
 
             foreach ($enrolment_instances as $instance) {
-                if ($instance->enrol == 'self') {
+                if ($instance->enrol == \local_activity_center\ActivityCenter::ENROL_PLUGIN) {
                     foreach ($users as $user) {
-                        $selfenrolment->unenrol_user($instance, $user->id);
+                        $enrolplugin->unenrol_user($instance, $user->id);
                     }
                 }
             }

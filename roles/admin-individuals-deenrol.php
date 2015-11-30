@@ -40,7 +40,7 @@ if ($confirm == "YES") {
 
     // first go through the individuals that have been built in the list part
 
-    $selfenrolment = enrol_get_plugin('self');
+    $enrolplugin = enrol_get_plugin(\local_activity_center\ActivityCenter::ENROL_PLUGIN);
 
     foreach ($SESSION->dnet_activity_center_individuals as $individual) {
         $user = $DB->get_record("user", array("idnumber" => $individual));
@@ -53,8 +53,8 @@ if ($confirm == "YES") {
         foreach ($DB->get_records_sql($sql, $params) as $row) {
             $enrolment_instances = enrol_get_instances($activity_id, true);
             foreach ($enrolment_instances as $instance) {
-                if ($instance->enrol == 'self') {
-                    $selfenrolment->unenrol_user($instance, $user->id);
+                if ($instance->enrol == \local_activity_center\ActivityCenter::ENROL_PLUGIN) {
+                    $enrolplugin->unenrol_user($instance, $user->id);
                 }
             }
         }
