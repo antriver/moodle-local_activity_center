@@ -27,6 +27,11 @@ require(dirname(dirname(dirname(__DIR__))) . '/config.php');
 
 $activitycenter = new \local_activity_center\ActivityCenter();
 
+$fix = array_key_exists('fix', getopt('', array('fix')));
+if (!$fix) {
+    echo "--fix option not given. Doing a dry-run".PHP_EOL;
+}
+
 define('STUDENT_ROLE_ID', 5);
 define('PARENT_ROLE_ID', 12);
 
@@ -110,11 +115,15 @@ foreach ($activities as $activity) {
                     SELECT userid FROM {user_enrolments} WHERE enrolid = {$selfparentsid}
                 )
             ";
-            $result = $DB->execute($sql);
+            if ($fix) {
+                $result = $DB->execute($sql);
+            }
 
             // Now everybody has switched over to the self_parents method, delete the self one.
             echo "\tDelete self enrolment method {$enrol->id}" . PHP_EOL;
-            $selfplugin->delete_instance($enrol);
+            if ($fix) {
+                $selfplugin->delete_instance($enrol);
+            }
         }
     }
 
@@ -152,12 +161,16 @@ foreach ($activities as $activity) {
         echo "\tAssigning role "
             . PARENT_ROLE_ID
             . " to user {$userrole->userid} in course {$userrole->courseid}" . PHP_EOL;
-        role_assign(PARENT_ROLE_ID, $userrole->userid, $userrole->contextid);
+        if ($fix) {
+            role_assign(PARENT_ROLE_ID, $userrole->userid, $userrole->contextid);
+        }
 
         echo "\tRemoving role "
             . STUDENT_ROLE_ID
             . " from user {$userrole->userid} in course {$userrole->courseid}" . PHP_EOL;
-        role_unassign(STUDENT_ROLE_ID, $userrole->userid, $userrole->contextid);
+        if ($fix) {
+            role_unassign(STUDENT_ROLE_ID, $userrole->userid, $userrole->contextid);
+        }
     }
 
     // Finally, we might have too many students enroled now (we don't limit parents)
@@ -216,7 +229,9 @@ foreach ($activities as $activity) {
                         $enroledat
                     );
                     fputcsv($unenrollog, $logline, ',', '"');
-                    $selfparentsplugin->unenrol_user($selfparentsenrol, $student->id);
+                    if ($fix) {
+                        $selfparentsplugin->unenrol_user($selfparentsenrol, $student->id);
+                    }
                 }
             }
         }
