@@ -92,7 +92,7 @@ foreach ($activities as $activity) {
     foreach ($enrolrows as $enrol) {
         $enrols[$enrol->enrol][] = $enrol;
     }
-
+    
     if (!empty($enrols['self']) && !empty($enrols['self_parents'])) {
 
         $selfparentsid = $enrols['self_parents'][0]->id;
@@ -125,6 +125,8 @@ foreach ($activities as $activity) {
                 $selfplugin->delete_instance($enrol);
             }
         }
+    } else {
+        continue;
     }
 
     // Now we need to change parents to have the parent role if they enroled as a student.
